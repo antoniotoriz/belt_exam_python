@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Welcome</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <style>
+        div#jobs_scroll{
+        height: 150px;
+        overflow: scroll;
+        }
+    </style>
+</head>
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand">Hello {{ user.first_name.capitalize }}!</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarText" aria-controls="navbarText" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarText">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+                <a class="nav-link">Home Page</a>
+            </li>
+        </ul>
+        <a href="/logout">Logout</a>
+        <span class="navbar-text">
+            | <a href="/job"><button>New Job</button></a>
+        </span>
+    </div>
+</nav>
+
+<body>
+    <div class="container">
+    <p>Everyone's Jobs:</p>
+    <div id="jobs_scroll">
+        <table class="table table-sm table-hover">
+            <thead>
+                <tr>
+                    <th scope="col">Job</th>
+                    <th scope="col">Location</th>
+                    <th scope="col">Action</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for jobs in job %}
+                <tr>
+                    
+                    
+                    {% if not user in jobs.users_who_like.all %}
+                    <th scope="row">{{jobs.title}}</th>
+                    <td>{{jobs.location}}</td>
+                    <td>
+                        <a href="/jobs/{{jobs.id}}">View</a> | 
+                        {% if jobs in user.jobs_uploaded.all %}
+                        <a href="/delete_job/{{jobs.id}}">Remove</a> | 
+                        {%endif%}
+                        {% if jobs in user.jobs_uploaded.all %}
+                        
+                        <a href="/jobs/edit/{{jobs.id}}">Edit</a> | 
+                        {%endif%}
+                        <a href="/add_favorites/{{jobs.id}}">Add </a> 
+                    {% endif %}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p>{{ user.first_name.capitalize }}'s Jobs:</p>
+
+        <div id="jobs_scroll">
+            <table class="table table-sm table-hover">
+                <thead>
+                    <tr>
+                        <th scope="col">Job</th>
+                        <th scope="col">Location</th>
+                        <th scope="col">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for jobs in job %}
+                    <tr>
+                        {% if user in jobs.users_who_like.all %}
+                        <th scope="row">{{jobs.title}}</th>
+                        <td>{{jobs.location}}</td>
+                        <td><a href="/jobs/{{jobs.id}}">View</a> | <a href="/delete_job/{{jobs.id}}">Done</a> | <a href="/remove_favorites/{{jobs.id}}">Give Up</a></td>
+                        {% endif %}
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    
+    </div>
+</body>
+
+</html>
